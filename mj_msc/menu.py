@@ -151,7 +151,12 @@ class ActiveAlarmsData:
         while len(self.alarms) != 9:
             self.alarms.append("-")
         if self.page == 1:
-            self.header(lcd)
+            # self.header(lcd)
+            lcd.clear()
+            lcd.text("Active Alarms:  ")
+            lcd.text(str(self.page))
+            lcd.text(">")
+            lcd.new_line()
             lcd.text(self.alarms[0])
             lcd.new_line()
             lcd.text(self.alarms[1])
@@ -160,7 +165,12 @@ class ActiveAlarmsData:
             lcd.y_cursor_pos = 1
             lcd.x_cursor_pos = 18
         elif self.page == 2:
-            self.header(lcd)
+            # self.header(lcd)
+            lcd.clear()
+            lcd.text("Active Alarms: <")
+            lcd.text(str(self.page))
+            lcd.text(">")
+            lcd.new_line()
             lcd.text(self.alarms[3])
             lcd.new_line()
             lcd.text(self.alarms[4])
@@ -169,7 +179,11 @@ class ActiveAlarmsData:
             lcd.y_cursor_pos = 1
             lcd.x_cursor_pos = self.x_pos
         elif self.page == 3:
-            self.header(lcd)
+            # self.header(lcd)
+            lcd.clear()
+            lcd.text("Active Alarms: <")
+            lcd.text(str(self.page))
+            lcd.new_line()
             lcd.text(self.alarms[6])
             lcd.new_line()
             lcd.text(self.alarms[7])
@@ -178,12 +192,12 @@ class ActiveAlarmsData:
             lcd.x_cursor_pos = 16
             lcd.y_cursor_pos = 1
         
-    def header(self,lcd):
-        lcd.clear()
-        lcd.text("Active Alarms: <")
-        lcd.text(str(self.page))
-        lcd.text(">")
-        lcd.new_line()
+    # def header(self,lcd):
+    #     lcd.clear()
+    #     lcd.text("Active Alarms: <")
+    #     lcd.text(str(self.page))
+    #     lcd.text(">")
+    #     lcd.new_line()
 
     def handle_alarms(self):
         bin_alarm1 = list(bin(int(self.alarm1))[2:].zfill(8))
@@ -231,9 +245,15 @@ class ActiveAlarmsData:
             lcd.menu = AlarmsMenu()
             lcd.menu.display_menu(lcd)
         elif command == b'C':
-            lcd.x_cursor_pos = 18
+            if self.page == 3:
+                pass
+            else:
+                lcd.x_cursor_pos = 18
         elif command == b'D':
-            lcd.x_cursor_pos = 16
+            if self.page == 1:
+                pass
+            else:
+                lcd.x_cursor_pos = 16
         elif command == b'B':
             pass
         elif command == b'H':
@@ -243,14 +263,16 @@ class ActiveAlarmsData:
             if col == 16:
                 if  self.page >=2:
                     self.page = self.page - 1
+                    self.x_pos = 16
                     self.display_menu(lcd)
-                    self.x_pos = 18
+                    
                     
             if col == 18:
                 if self.page <= 2:
                     self.page = self.page + 1
+                    self.x_pos = 18
                     self.display_menu(lcd)
-                    self.x_pos = 16
+                    
         else:
             pass
         
