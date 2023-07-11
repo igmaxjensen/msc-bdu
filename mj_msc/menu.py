@@ -1,6 +1,7 @@
 
 import port
 from tc10259 import TC10259
+import time
     
 class Menu1:
     
@@ -817,6 +818,7 @@ class BDUInfoData:
        lcd.text("Internal Temp: ")
        lcd.text(temp)
        
+       
        # display inner data
         
      def processkey(self, command, lcd):
@@ -837,7 +839,7 @@ class BDUInfoData:
             # coords = (lcd.x_cursor_pos, lcd.y_cursor_pos)
             # print(coords)
         elif command == b'E':
-            pass
+            lcd.menu.display_menu(lcd)
         else:
             pass
 
