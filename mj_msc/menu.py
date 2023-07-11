@@ -10,7 +10,7 @@ class Menu1:
     def display_menu(self, lcd):
        lcd.clear() 
        lcd.display.write(b'\xfe\x53')
-       lcd.text("   -Device Name-   ")
+       lcd.text("   -  MSC-BDU  -   ")
        lcd.text("+ System Status   ")
        lcd.text("+ Edit            ")
        lcd.text("+ System Info     ")
@@ -531,7 +531,7 @@ class EditMenu:
         
 class ChangeSystemModeMenu:
     def __init__(self):
-       pass
+       self.sys_mode = "LAISR"
    
     def display_menu(self, lcd):
        lcd.clear() 
@@ -541,8 +541,7 @@ class ChangeSystemModeMenu:
        # ask how we can get the current mode
        # later mode will be an lcd attribute so that 
        # both display_meny and processkey can call it
-       sys_mode = "LAISR"
-       lcd.text("Mode: " + sys_mode)
+       lcd.text("Mode: " + self.sys_mode)
        lcd.text("~ Change Mode")     
        lcd.x_cursor_pos = 1
        lcd.y_cursor_pos = 3
@@ -557,13 +556,9 @@ class ChangeSystemModeMenu:
             # lcd.x_cursor_pos += 1
             pass
         elif command == b'B':
-            lcd.y_cursor_pos -= 1
-            # coords = (lcd.x_cursor_pos, lcd.y_cursor_pos)
-            # print(coords)
+            pass
         elif command == b'H':
-            lcd.y_cursor_pos += 1
-            # coords = (lcd.x_cursor_pos, lcd.y_cursor_pos)
-            # print(coords)
+            pass
         elif command == b'E':
             row = lcd.y_cursor_pos
             if row == 3:
@@ -600,10 +595,12 @@ class RebootMenu:
             lcd.menu = EditMenu()
             lcd.menu.display_menu(lcd)
         elif command == b'C':
-            # lcd.x_cursor_pos += 1
             pass
         elif command == b'B':
-            lcd.y_cursor_pos -= 1
+            if lcd.y_cursor_pos >= 3:
+                lcd.y_cursor_pos -= 1
+            else:
+                pass
             # coords = (lcd.x_cursor_pos, lcd.y_cursor_pos)
             # print(coords)
         elif command == b'H':
@@ -660,9 +657,14 @@ class ScreenSettingsMenu:
         elif command == b'D':
             lcd.x_cursor_pos -= 1
         elif command == b'B':
-            lcd.y_cursor_pos -= 1
+            if lcd.y_cursor_pos >=3:
+                lcd.y_cursor_pos -= 1
+            else:
+                pass
         elif command == b'H':
             lcd.y_cursor_pos += 1
+            if lcd.y_cursor_pos == 4:
+                lcd.x_cursor_pos = 2
         elif command == b'E':
             col = lcd.x_cursor_pos
             row = lcd.y_cursor_pos
@@ -736,18 +738,17 @@ class SystemInfoMenu:
             else:
                 lcd.y_cursor_pos -= 1
         elif command == b'H':
-            row = lcd.y_cursor_pos 
-            if row >= 3:
-                pass
-            else:
-                lcd.y_cursor_pos += 1
+            lcd.y_cursor_pos += 1
         elif command == b'E':
             row = lcd.y_cursor_pos
             if row == 2:
                 lcd.menu = FirmwareVersionData()
                 lcd.menu.display_menu(lcd)
-            elif row == 3:
+            elif row == 4:
                 lcd.menu = OtherInfoData()
+                lcd.menu.display_menu(lcd)
+            elif row == 3:
+                lcd.menu = BDUInfoData()
                 lcd.menu.display_menu(lcd)
             else:
                 pass
@@ -799,6 +800,7 @@ class BDUInfoData:
    
      def display_menu(self, lcd):
        lcd.clear() 
+       lcd.display.write(b'\xfe\x54')
        lcd.text("BDU Info:")
        lcd.new_line()
        fan_speeds = self.device.fan_speeds()
