@@ -138,50 +138,55 @@ class AlarmsMenu:
         
 class ActiveAlarmsData:
     def __init__(self):
+        # Updated
         self.device = TC10259(0x60)
         self.alarm1 = self.device.alarm1()
         self.alarm2 = self.device.alarm2()
         self.page = 1
+        self.x_pos = 16
+        
         
     def display_menu(self, lcd):
-       self.show_alarms(lcd)
-       lcd.x_cursor_pos = 16
-       lcd.y_cursor_pos = 1
-       
-    def show_alarms(self,lcd):
         self.alarms = self.handle_alarms()
+        while len(self.alarms) != 9:
+            self.alarms.append("-")
         if self.page == 1:
             self.header(lcd)
             lcd.text(self.alarms[0])
             lcd.new_line()
             lcd.text(self.alarms[1])
             lcd.new_line()
-            lcd.text(self.alarm[2])
-            pass
+            lcd.text(self.alarms[2])
+            lcd.y_cursor_pos = 1
+            lcd.x_cursor_pos = 18
         elif self.page == 2:
             self.header(lcd)
             lcd.text(self.alarms[3])
             lcd.new_line()
             lcd.text(self.alarms[4])
             lcd.new_line()
-            lcd.text(self.alarm[5])
+            lcd.text(self.alarms[5])
+            lcd.y_cursor_pos = 1
+            lcd.x_cursor_pos = self.x_pos
         elif self.page == 3:
             self.header(lcd)
             lcd.text(self.alarms[6])
             lcd.new_line()
             lcd.text(self.alarms[7])
             lcd.new_line()
-            lcd.text(self.alarm[8])
+            lcd.text(self.alarms[8])
+            lcd.x_cursor_pos = 16
+            lcd.y_cursor_pos = 1
         
     def header(self,lcd):
         lcd.clear()
         lcd.text("Active Alarms: <")
-        lcd.text(self.page)
+        lcd.text(str(self.page))
         lcd.text(">")
         lcd.new_line()
 
     def handle_alarms(self):
-        bin_alarm1 = list(bin(self.alarm1)[2:].zfill(8))
+        bin_alarm1 = list(bin(int(self.alarm1))[2:].zfill(8))
         alarms = []
         if bin_alarm1[7] == 1:
             alarms2 = self.handle_alarm2
@@ -200,7 +205,7 @@ class ActiveAlarmsData:
         return alarms
 
     def handle_alarm2(self):
-        bin_alarm2 = list(bin(self.alarm2)[2:].zfill(8))
+        bin_alarm2 = list(bin(int(self.alarm2))[2:].zfill(8))
         alarms = []
         if bin_alarm2[7] == 1:
             alarms.append("Fan 1 Failure")
@@ -238,12 +243,14 @@ class ActiveAlarmsData:
             if col == 16:
                 if  self.page >=2:
                     self.page = self.page - 1
-                    self.display.menu(lcd)
+                    self.display_menu(lcd)
+                    self.x_pos = 18
                     
             if col == 18:
                 if self.page <= 2:
                     self.page = self.page + 1
-                    self.display.menu(lcd)
+                    self.display_menu(lcd)
+                    self.x_pos = 16
         else:
             pass
         
