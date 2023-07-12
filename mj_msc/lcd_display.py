@@ -27,6 +27,7 @@ class LCD:
         self.fault = True
         self.led = LED()
         self.fan_ctrl = TC10259(0x60)
+        self.time = 0
     
     def start(self):
         # starts a thread
@@ -36,6 +37,7 @@ class LCD:
             self.display.open()
             self.thread.start()
             self.contrast = 128
+            self.time = 0
             # self.backlight = "On"
             self.clear()
             self.dim = 200
@@ -69,6 +71,10 @@ class LCD:
                         self.display.write(b'\xfe\x53')
                     else:
                         self.menu.processkey(command, self)
+                    self.time = 0
+                else:
+                    self.time = self.time + 1
+                    print("time passed")
                 if self.status:
                     # make status led green                    
                     self.led.one_green(self.display)
@@ -83,6 +89,9 @@ class LCD:
                     if not self.fault:
                         # make fault led red
                         self.led.three_red(self.display)
+                if self.time = 100:
+                    self.menu = self.home_menu
+                    self.home_menu.display_menu(self)
             except Exception as e:
                 print(str(e))
                 
