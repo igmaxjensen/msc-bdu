@@ -54,10 +54,10 @@ class LCD:
         while self.running:
             try:
                 alarm1 = list(bin(int(self.fan_ctrl.alarm1()))[2:].zfill(8))
-                if alarm1[7] == 1 or alarm1[6] == 1:
+                if alarm1[7] == '1' or alarm1[6] == '1':
                     self.status = False
                     self.fault = False
-                elif alarm1[5] == 1 or alarm1[4] == 1 or alarm1[3] == 1 or alarm1[2] == 1 or alarm1[1] == 1:
+                elif alarm1[5] == '1' or alarm1[4] == '1' or alarm1[3] == '1' or alarm1[2] == '1' or alarm1[1] == '1':
                     self.status = False
                     self.alarm = False
                 command = self.display.read(1)

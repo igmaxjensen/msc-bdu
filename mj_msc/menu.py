@@ -64,6 +64,7 @@ class SystemStatusMenu:
         lcd.text("+ LAISR")
         lcd.x_cursor_pos = 1
         lcd.y_cursor_pos = 3
+    
        
     def processkey(self, command, lcd):
         # processes a key to a command to alter the display
@@ -158,7 +159,7 @@ class ActiveAlarmsData:
             lcd.text(str(self.page))
             lcd.text(">")
             lcd.new_line()
-            lcd.text(self.alarms[0])
+            lcd.text(str(self.alarms[0]))
             lcd.new_line()
             lcd.text(self.alarms[1])
             lcd.new_line()
@@ -203,40 +204,40 @@ class ActiveAlarmsData:
     def handle_alarms(self):
         bin_alarm1 = list(bin(int(self.alarm1))[2:].zfill(8))
         alarms = []
-        if bin_alarm1[7] == 1:
-            alarms2 = self.handle_alarm2
+        if bin_alarm1[7] == '1':
+            alarms2 = self.handle_alarm2()
             for alarm in alarms2:
                 alarms.append(alarm)
-        if bin_alarm1[6] == 1:
-            alarms2 = self.handle_alarm2
+        if bin_alarm1[6] == '1':
+            alarms2 = self.handle_alarm2()
             for alarm in alarms2:
                 alarms.append(alarm)
-        if bin_alarm1[5] == 1:
+        if bin_alarm1[5] == '1':
             alarms.append("Overtemp Failure")
-        if bin_alarm1[2] == 1:
+        if bin_alarm1[2] == '1':
             alarms.append("Thermistor Failure")
-        if bin_alarm1[1] == 1:
+        if bin_alarm1[1] == '1':
             alarms.append("Filter Blockage")
         return alarms
 
     def handle_alarm2(self):
         bin_alarm2 = list(bin(int(self.alarm2))[2:].zfill(8))
         alarms = []
-        if bin_alarm2[7] == 1:
+        if bin_alarm2[7] == '1':
             alarms.append("Fan 1 Failure")
-        if bin_alarm2[6] == 1:
+        if bin_alarm2[6] == '1':
             alarms.append("Fan 2 Failure")
-        if bin_alarm2[5] == 1:
+        if bin_alarm2[5] == '1':
             alarms.append("Fan 3 Failure")
-        if bin_alarm2[4] == 1:
+        if bin_alarm2[4] == '1':
             alarms.append("Fan 4 Failure")
-        if bin_alarm2[3] == 1:
+        if bin_alarm2[3] == '1':
             alarms.append("Predict Fan 1 Fail")
-        if bin_alarm2[2] == 1:
+        if bin_alarm2[2] == '1':
             alarms.append("Predict Fan 2 Fail")
-        if bin_alarm2[1] == 1:
+        if bin_alarm2[1] == '1':
             alarms.append("Predict Fan 3 Fail")
-        if bin_alarm2[0] == 1:
+        if bin_alarm2[0] == '1':
             alarms.append("Predict Fan 4 Fail")
         return alarms
         
