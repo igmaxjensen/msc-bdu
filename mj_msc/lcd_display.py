@@ -6,12 +6,12 @@ from port import Port
 from menu import Menu1
 import time
 
+# LCD class manages the LCD screen
+# Owns thread and loop that polls information
+# to be displayed on the lcd display
 class LCD:
 
     def __init__(self):
-        # initializes LCD
-        # later add config to take out the hardcoded 
-        # port_name and other parameters
         self.display = Port.port
         self.thread = None
         self.running = False
