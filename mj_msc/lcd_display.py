@@ -6,6 +6,7 @@ from port import Port
 from menu import Menu1
 import time
 
+# LCD class
 class LCD:
 
     def __init__(self):
