@@ -6,5 +6,5 @@ import time
 lcd = LCD()
 lcd.display.close()
 lcd.start()
-time.sleep(120)
+time.sleep(1000)
 lcd.stop()

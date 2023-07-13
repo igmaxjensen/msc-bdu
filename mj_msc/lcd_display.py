@@ -74,7 +74,7 @@ class LCD:
                     self.time = 0
                 else:
                     self.time = self.time + 1
-                    print("time passed")
+                    print(self.time)
                 if self.status:
                     # make status led green                    
                     self.led.one_green(self.display)
@@ -89,9 +89,10 @@ class LCD:
                     if not self.fault:
                         # make fault led red
                         self.led.three_red(self.display)
-                if self.time = 100:
+                if self.time == 1200:
                     self.menu = self.home_menu
                     self.home_menu.display_menu(self)
+                    self.time = 0
             except Exception as e:
                 print(str(e))
                 
