@@ -29,8 +29,9 @@ class LCD:
         self.fan_ctrl = TC10259(0x60)
         self.time = 0
     
+    # Starts a thread and sets conditions
+    # If thread already running then does nothing
     def start(self):
-        # starts a thread
         if not self.running:
             self.running = True
             self.thread = threading.Thread(target=self._update_thread)
@@ -38,23 +39,23 @@ class LCD:
             self.thread.start()
             self.contrast = 128
             self.time = 0
-            # self.backlight = "On"
             self.clear()
             self.dim = 200
             self.led.start_state(self.display)
             self.menu.display_menu(self)
             
+    # If thread is running ends thread
     def stop(self):
-         # stops a thread
         if self.running:
             self.running = False
             self.display.close()
             self.thread.join()
-            
+    
+    # Main loop for information polling and screen updates
     def _update_thread(self):
-        # opens while loop to recieve keys
         while self.running:
             try:
+                # LED Control on alarm poll
                 alarm1 = list(bin(int(self.fan_ctrl.alarm1()))[2:].zfill(8))
                 if alarm1[7] == '1' or alarm1[6] == '1':
                     self.status = False
@@ -62,6 +63,7 @@ class LCD:
                 elif alarm1[5] == '1' or alarm1[4] == '1' or alarm1[3] == '1' or alarm1[2] == '1' or alarm1[1] == '1':
                     self.status = False
                     self.alarm = False
+                # Read command and react to button press
                 command = self.display.read(1)
                 if command is not None and len(command) != 0:
                     if command == b'G':
@@ -89,15 +91,16 @@ class LCD:
                     if not self.fault:
                         # make fault led red
                         self.led.three_red(self.display)
+                # Sleep timer control
                 if self.time == 1200:
                     self.menu = self.home_menu
                     self.home_menu.display_menu(self)
                     self.time = 0
             except Exception as e:
                 print(str(e))
-                
+    
+    # Displays given text to the lcd display   
     def text(self, message):
-        # displays given text to the display
         length = len(message)
         if self.x_cursor_pos + length > 20:
             self.y_cursor_pos += 1
@@ -105,8 +108,8 @@ class LCD:
         self.display.write(message.encode())
         self.x_cursor_pos += length
         
+    # Clears the lcd display
     def clear(self):
-        # clears the display
         self.display.write(b'\xfe\x58')
         self.x_cursor_pos = 1
         self.y_cursor_pos = 1
