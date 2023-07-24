@@ -1,4 +1,3 @@
-
 import threading
 from led import LED
 from tc10259 import TC10259
@@ -114,33 +113,41 @@ class LCD:
         self.x_cursor_pos = 1
         self.y_cursor_pos = 1
         
+    # Opens the port to recieve lcd specific commands
     def open_port(self):
         if not self.display.is_open:
             self.display.open()
-            
+    
+    # Closes port from recieving lcd specific commands
     def close_port(self):
         if self.display.is_open:
             self.display.close()
-            
+    
+    # Returns lcd to specified home menu
     def home_menu(self):
         self.menu = self.home_menu
     
+    # Returns the cursor to the top left of the lcd
     def home_line(self):
         self.x_cursor_pos = 1
         self.y_cursor_pos = 1
-        
+    
+    # Sends cursor to the next line of the lcd
     def new_line(self):
         self.y_cursor_pos += 1
         self.x_cursor_pos = 1
-        
+    
+    # Turns on the lcd backlight
     def backlight_on(self):
         time = bytes([0x0])
         command = b'\xfe\x42'
         self.display.write(command + time)
         
+    # Turns off the lcd backlight
     def backlight_off(self):
         self.display.write(b'\xfe\x46')
     
+    # Property and setter for the current menu to be displayed on the lcd
     @property
     def menu(self):
         return self._menu
@@ -150,6 +157,7 @@ class LCD:
         new_menu.display_menu(self)
         self._menu = new_menu
     
+    # Property and setter for the x and y cursor positions on the lcd
     @property
     def x_cursor_pos(self):
         return self._x_cursor_pos
@@ -178,6 +186,7 @@ class LCD:
         self.display.write(cursor_command)
         self._y_cursor_pos = new_y
         
+    # Property and setter for the lcd screen brightness
     @property
     def dim(self):
         return self._dim_level
@@ -191,7 +200,8 @@ class LCD:
         dim_command = bytes([0xfe, 0x99, level])
         self.display.write(dim_command)
         self._dim_level = level
-        
+    
+    # Property and setter for the lcd screen contrast
     @property 
     def contrast(self):
         return self._contrast
@@ -206,6 +216,7 @@ class LCD:
         self.display.write(contrast_command)
         self._contrast = level
 
+    # property and setter for lcd backlight
     @property
     def backlight(self):
         return self._backlight
